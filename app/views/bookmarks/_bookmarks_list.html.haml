@@ -1,0 +1,5 @@
+- if @has_bookmarks
+  %ul
+    != render :partial => "bookmark", :collection => @bookmarks
+- else
+  [Your bookmarks list is currently empty]

@@ -1,0 +1,6 @@
+!= form_for @new_bookmark do |f|
+  %div
+    = f.label :address
+    %br/
+    = f.text_field :address
+  %div= f.submit "Add Bookmark"
