@@ -38,7 +38,7 @@ describe BookmarksController do
       describe "with valid bookmarks attributes" do
 
         before do
-          @attrs = {:user_id => @user.id, :address => @bookmark_address}
+          @attrs = {:address => @bookmark_address}
         end
       
         it "should return HTTP success" do
