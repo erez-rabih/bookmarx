@@ -1,4 +1,4 @@
-- if @has_bookmarks
+- if @bookmarks.any?
   %ul
     != render :partial => "bookmark", :collection => @bookmarks
 - else

@@ -5,10 +5,9 @@ class BookmarksController < ApplicationController
   end
 
   def create
-    @bookmark = Bookmark.new(params[:bookmark])
-    if @bookmark.save
-      flash.notice = I18n.t(:successful, :scope => [:flash, :bookmarks, :create])
-    end
+    @bookmark = current_user.bookmarks.build(params[:bookmark])
+    flash_message = @bookmark.save ? :successful : :failed
+    flash.notice = I18n.t(flash_message, :scope => [:flash, :bookmarks, :create])
     load_bookmarks
     render :index
   end
@@ -17,7 +16,6 @@ class BookmarksController < ApplicationController
 
   def load_bookmarks
     @bookmarks = current_user.bookmarks
-    @has_bookmarks = @bookmarks.any?
-    @new_bookmark = current_user.bookmarks.build
+    @new_bookmark = Bookmark.new
   end
 end
