@@ -1,8 +1,9 @@
 source 'https://rubygems.org'
 
 gem 'rails', '3.2.3'
-gem 'mysql2'
+gem 'mysql2', '=0.3.11'
 gem 'haml'
+gem 'devise', '=2.1.0'
 
 
 group :assets do
