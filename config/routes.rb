@@ -1,6 +1,13 @@
 Bookmarx::Application.routes.draw do
 
+  devise_for :users, :path => "", :path_names => {:sign_in => :login, :sign_up => :signup, :sign_out => :logout}
+  match "login" => "devise/sessions#new"
+  match "logout" => "devise/sessions#destroy"
+  match "signup" => "devise/registrations#new"
+
   root :to => "pages#welcome"
+
+  resources :bookmarks
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
