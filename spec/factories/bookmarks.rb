@@ -2,7 +2,7 @@
 
 FactoryGirl.define do
   factory :bookmark do
-    user_id 1
+    user
     address "http://www.fake.com"
   end
 end

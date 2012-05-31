@@ -1,1 +1,4 @@
-%li= link_to bookmark.address, bookmark.address
+%li 
+  != link_to bookmark.address, bookmark.address
+  |
+  != link_to "Delete", bookmark_path(bookmark), :method => :delete

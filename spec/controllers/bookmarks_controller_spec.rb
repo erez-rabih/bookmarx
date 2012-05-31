@@ -35,8 +35,8 @@ describe BookmarksController do
         @bookmark_address = "http://www.fake.com"
       end
 
-      def post_create_bookmark
-        post :create, :bookmark => @attrs
+      def post_create_bookmark(attrs)
+        post :create, :bookmark => attrs
       end
 
       describe "with valid bookmarks attributes" do
@@ -46,23 +46,23 @@ describe BookmarksController do
         end
       
         it "should return HTTP success" do
-          post_create_bookmark
+          post_create_bookmark(@attrs)
           response.should be_success
         end
 
         it "should increase bookmarks count" do
           expect {
-            post_create_bookmark
+            post_create_bookmark(@attrs)
           }.to change(Bookmark, :count).by(1)
         end
 
         it "should add address to user bookmarks" do
-          post_create_bookmark
+          post_create_bookmark(@attrs)
           @user.bookmarks.map(&:address).include?(@bookmark_address).should be_true
         end
 
         it "should flash bookmark created message" do
-          post_create_bookmark
+          post_create_bookmark(@attrs)
           flash[:notice].should == I18n.t(:successful, :scope => [:flash, :bookmarks, :create])
         end
 
@@ -70,14 +70,18 @@ describe BookmarksController do
 
       describe "with invalid bookmarks attributes" do
 
+        before do
+          @attrs = {}
+        end
+
         it "should return HTTP success" do
-          post_create_bookmark
+          post_create_bookmark(@attrs)
           response.should be_success
         end
 
         it "should not increase bookmarks count" do
           expect {
-            post_create_bookmark
+            post_create_bookmark(@attrs)
           }.not_to change(Bookmark, :count)
         end
 
@@ -103,7 +107,7 @@ describe BookmarksController do
       end
 
       def send_delete_bookmark
-        delete :destroy, :bookmark_id => @bookmark_to_delete.id
+        delete :destroy, :id => @bookmark_to_delete.id
       end
       
       

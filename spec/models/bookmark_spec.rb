@@ -29,7 +29,7 @@ describe Bookmark do
 
   describe "associations" do
     it "should belong to user" do
-      expect {Factory(:bookmark).user}.not_to raise_exception
+      expect {Factory(:bookmark, :user => Factory(:user)).user}.not_to raise_exception
     end
   end
 end

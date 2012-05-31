@@ -1,5 +1,7 @@
 class BookmarksController < ApplicationController
+
   before_filter :authenticate_user!
+
   def index
     load_bookmarks
   end
@@ -13,7 +15,7 @@ class BookmarksController < ApplicationController
   end
 
   def destroy
-    bookmark = current_user.bookmarks.find_by_id(params[:bookmark_id])
+    bookmark = current_user.bookmarks.find_by_id(params[:id])
     if bookmark
       bookmark.destroy
       assign_flash :successful
@@ -27,7 +29,7 @@ class BookmarksController < ApplicationController
   protected
 
   def load_bookmarks
-    @bookmarks = current_user.bookmarks
+    @bookmarks = current_user.reload.bookmarks
     @new_bookmark = Bookmark.new
   end
 end
