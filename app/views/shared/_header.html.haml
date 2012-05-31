@@ -1,0 +1,14 @@
+.header
+  %ul
+    %li= link_to "Home", root_path
+    -if user_signed_in?
+      %li 
+        Hello,
+        =current_user.email
+      %li= link_to "Logout", logout_path, :method => :delete
+    -else
+      %li= link_to "Sign-up Here", signup_path
+      %li 
+        Already Signed-Up?
+        = link_to "Login Here", login_path
+

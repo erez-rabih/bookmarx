@@ -1,0 +1,6 @@
+%h3 Your Personal Bookmarks List
+- if @bookmarks.any?
+  %ul
+    != render :partial => "bookmark", :collection => @bookmarks
+- else
+  [Your bookmarks list is currently empty]
