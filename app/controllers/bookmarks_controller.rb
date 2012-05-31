@@ -7,7 +7,19 @@ class BookmarksController < ApplicationController
   def create
     @bookmark = current_user.bookmarks.build(params[:bookmark])
     flash_message = @bookmark.save ? :successful : :failed
-    flash.notice = I18n.t(flash_message, :scope => [:flash, :bookmarks, :create])
+    assign_flash flash_message
+    load_bookmarks
+    render :index
+  end
+
+  def destroy
+    bookmark = current_user.bookmarks.find_by_id(params[:bookmark_id])
+    if bookmark
+      bookmark.destroy
+      assign_flash :successful
+    else
+      assign_flash :failed
+    end
     load_bookmarks
     render :index
   end

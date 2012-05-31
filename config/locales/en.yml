@@ -44,3 +44,8 @@ en:
     bookmarks:
       create:
         successful: "Successfully added your new bookmark!"
+        failed: "Could not save bookmark"
+      destroy:
+        successful: "Successfully deleted your bookmark!"
+        failed: "Could not delete bookmark"
+        

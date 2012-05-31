@@ -2,6 +2,11 @@ require 'spec_helper'
 
 describe BookmarksController do
   render_views
+  
+  def set_and_sign_user
+    @user = Factory :user
+    sign_in @user
+  end
 
   describe "GET 'index'" do
     it "returns http success" do
@@ -26,9 +31,8 @@ describe BookmarksController do
     describe "authenticated request" do
 
       before do
-        @user = Factory :user
+        set_and_sign_user
         @bookmark_address = "http://www.fake.com"
-        sign_in @user
       end
 
       def post_create_bookmark
@@ -82,5 +86,84 @@ describe BookmarksController do
     end
 
   end
+
+  describe "DELETE destroy" do
+
+    describe "not authenticated" do
+      it "should redirect" do
+        delete :destroy
+        response.should be_redirect
+      end
+    end
+
+    describe "authenticated" do
+      before do
+        set_and_sign_user
+        @bookmarks = [Factory(:bookmark, :user => @user), Factory(:bookmark, :user => @user)]
+      end
+
+      def send_delete_bookmark
+        delete :destroy, :bookmark_id => @bookmark_to_delete.id
+      end
+      
+      
+      describe "valid bookmark deletion" do
+
+        before do
+          @bookmark_to_delete = @bookmarks.first
+        end
+
+        it "should return HTTP success" do
+          send_delete_bookmark
+          response.should be_success
+        end
+
+        it "should decrease bookmarks count by 1" do
+          expect {
+            send_delete_bookmark
+          }.to change(Bookmark, :count).by(-1)
+        end
+        
+        it "should delete the right bookmark" do
+          send_delete_bookmark
+          @user.bookmarks.should == (@bookmarks - [@bookmarks.first])
+        end
+
+        it "should set flash message to successful delete" do
+          send_delete_bookmark
+          flash.notice.should == I18n.t(:successful, :scope => [:flash, :bookmarks, :destroy])
+        end
+        
+
+      end
+      
+      describe "invalid bookmark deletion" do
+        before do
+          another_user = Factory :user
+          @bookmark_to_delete = Factory(:bookmark, :user => another_user)
+        end
+
+        it "should return HTTP success" do
+          send_delete_bookmark
+          response.should be_success
+        end
+
+        it "should not decrease bookmarks count by 1" do
+          expect {
+            send_delete_bookmark
+          }.not_to change(Bookmark, :count)
+        end
+
+        
+        it "should set flash message to successful delete" do
+          send_delete_bookmark
+          flash.notice.should == I18n.t(:failed, :scope => [:flash, :bookmarks, :destroy])
+        end
+        
+      end
+
+    end
+  end
+ 
 
 end

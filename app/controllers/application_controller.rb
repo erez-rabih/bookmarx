@@ -7,4 +7,8 @@ class ApplicationController < ActionController::Base
     bookmarks_path
   end
 
+  def assign_flash(key)
+    flash.notice = I18n.t(key, :scope => [:flash, params[:controller], params[:action]])
+  end
+
 end
