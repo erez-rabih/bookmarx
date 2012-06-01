@@ -2,36 +2,36 @@ require 'spec_helper'
 
 describe BookmarksController do
   render_views
+
+  {:get => :index, :post => :create, :delete => :destroy, :delete => :mass_destroy}.each do |http_verb, action|
+    it "should require authentication for #{action}" do
+      send(http_verb, action)
+      response.should be_redirect
+    end
+  end
   
-  def set_and_sign_user
-    @user = Factory :user
-    sign_in @user
-  end
-
-  describe "GET 'index'" do
-    it "returns http success" do
-      sign_in Factory(:user)
-      get 'index'
-      response.should be_success
+  describe "authenticated call to" do
+    def set_and_sign_user
+      @user = Factory :user
+      sign_in @user
     end
 
-    it "should require authentication" do
-      get :index
-      response.should be_redirect
-    end
-  end
-
-  describe "POST create" do
-
-    it "should require authentication" do
-      post :create
-      response.should be_redirect
+    before do
+      set_and_sign_user
     end
 
-    describe "authenticated request" do
+    describe "GET 'index'" do
+      it "returns http success" do
+        sign_in Factory(:user)
+        get 'index'
+        response.should be_success
+      end
+
+    end
+
+    describe "POST create" do
 
       before do
-        set_and_sign_user
         @bookmark_address = "http://www.fake.com"
       end
 
@@ -50,7 +50,7 @@ describe BookmarksController do
           response.should be_success
         end
 
-        it "should increase bookmarks count" do
+        it "should increase bookmarks count by 1" do
           expect {
             post_create_bookmark(@attrs)
           }.to change(Bookmark, :count).by(1)
@@ -89,20 +89,9 @@ describe BookmarksController do
 
     end
 
-  end
+    describe "DELETE destroy" do
 
-  describe "DELETE destroy" do
-
-    describe "not authenticated" do
-      it "should redirect" do
-        delete :destroy
-        response.should be_redirect
-      end
-    end
-
-    describe "authenticated" do
       before do
-        set_and_sign_user
         @bookmarks = [Factory(:bookmark, :user => @user), Factory(:bookmark, :user => @user)]
       end
 
@@ -159,11 +148,76 @@ describe BookmarksController do
         end
 
         
-        it "should set flash message to successful delete" do
+        it "should set flash message to failed delete" do
           send_delete_bookmark
           flash.notice.should == I18n.t(:failed, :scope => [:flash, :bookmarks, :destroy])
         end
         
+      end
+    end
+
+    describe "DELETE mass_destroy" do
+      
+
+      def send_mass_destroy(bookmarks)
+        delete :mass_destroy, :ids => bookmarks.map(&:id)
+      end
+
+      before do
+        @bookmarks = []
+        4.times { @bookmarks << Factory(:bookmark, :user => @user)  }
+      end
+
+      describe "with valid bookmarks" do
+
+        describe "empty bookmarks set" do
+          it "should return HTTP success" do
+            send_mass_destroy([])
+            response.should be_success
+          end
+
+          it "should not change bookmarks count" do
+            expect {
+              send_mass_destroy([])
+            }.not_to change(Bookmark, :count)
+          end
+        end
+
+        describe "partial bookmarks set" do
+          before do
+            @bookmarks_to_delete = @bookmarks[1..2]
+          end
+
+          it "should return HTTP success" do
+            send_mass_destroy(@bookmarks_to_delete)
+            response.should be_success
+          end
+
+          it "should change bookmarks count by -2" do
+            expect {
+              send_mass_destroy(@bookmarks_to_delete)
+            }.to change(Bookmark, :count).by(-2)
+          end
+
+          it "should leave not deleted bookmarks untouched" do
+            send_mass_destroy(@bookmarks_to_delete)
+            @user.bookmarks.should == [@bookmarks[0], @bookmarks[3]]
+          end
+
+        end
+
+        describe "all bookmarks set" do
+
+          it "should return HTTP success" do
+            send_mass_destroy(@bookmarks)
+            response.should be_success
+          end
+          
+          it "should empty user bookmarks list" do
+            send_mass_destroy(@bookmarks)
+            @user.bookmarks.should be_blank
+          end
+        end
       end
 
     end

@@ -7,7 +7,11 @@ Bookmarx::Application.routes.draw do
 
   root :to => "pages#welcome"
 
-  resources :bookmarks
+  resources :bookmarks do
+    collection do
+      delete :mass_destroy
+    end
+  end
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

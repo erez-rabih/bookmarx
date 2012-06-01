@@ -26,6 +26,13 @@ class BookmarksController < ApplicationController
     render :index
   end
 
+  def mass_destroy
+    bookmarks_to_delete = current_user.bookmarks.find_all_by_id(params[:ids])
+    bookmarks_to_delete.each(&:destroy)
+    load_bookmarks
+    render :index
+  end
+
   protected
 
   def load_bookmarks
