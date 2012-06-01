@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   end
 
   def assign_flash(key)
-    flash.notice = I18n.t(key, :scope => [:flash, params[:controller], params[:action]])
+    flash.now[:notice] = I18n.t(key, :scope => [:flash, params[:controller], params[:action]])
   end
 
 end

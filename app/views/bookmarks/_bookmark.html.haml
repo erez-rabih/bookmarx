@@ -1,4 +1,4 @@
-%li 
-  != link_to bookmark.address, bookmark.address
-  |
-  != link_to "Delete", bookmark_path(bookmark), :method => :delete
+!= content_tag_for(:tr, bookmark) do
+  %td!= check_box_tag "ids[]", bookmark.id, false, :id => "mass_delete_#{dom_id(bookmark)}"
+  %td!= link_to bookmark.address, bookmark.address
+  %td!= link_to "Delete", bookmark_path(bookmark), :method => :delete

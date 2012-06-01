@@ -1,0 +1,11 @@
+- if @bookmarks.any?
+  != form_for :bookmark, :url => mass_destroy_bookmarks_path, :method => :delete do |f|
+    %table
+      %thead
+        %th= f.submit "Remove Checked"
+        %th Address
+        %th Actions
+      %tbody
+        != render :partial => "bookmark", :collection => @bookmarks
+- else
+  [Your bookmarks list is currently empty]
