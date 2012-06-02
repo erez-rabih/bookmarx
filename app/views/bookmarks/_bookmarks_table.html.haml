@@ -1,9 +1,11 @@
 - if @bookmarks.any?
   != form_for :bookmark, :url => mass_destroy_bookmarks_path, :method => :delete do |f|
-    %table
+    %table.bookmarks
       %thead
         %th= f.submit "Remove Checked"
         %th Address
+        %th Video Title
+        %th Thumbnail
         %th Actions
       %tbody
         != render :partial => "bookmark", :collection => @bookmarks

@@ -1,4 +1,8 @@
-!= content_tag_for(:tr, bookmark) do
+!= content_tag_for(:tr, bookmark, 'data-video-id' => bookmark.video_id) do
   %td!= check_box_tag "ids[]", bookmark.id, false, :id => "mass_delete_#{dom_id(bookmark)}"
   %td!= link_to bookmark.address, bookmark.address
-  %td!= link_to "Delete", bookmark_path(bookmark), :method => :delete
+  %td.video_title Not Available
+  %td.thumbnail!= image_tag (bookmark.video_id ? "ajax-loader.gif" : "na.png")
+  %td
+    != link_to "Delete", bookmark_path(bookmark), :method => :delete
+    != javascript_include_tag bookmark.jsonp_url if bookmark.jsonp_url

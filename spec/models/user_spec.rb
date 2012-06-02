@@ -39,8 +39,6 @@ describe User do
     end
 
     it "should have an empty bookmarks list on initialization" do
-    :q
-
       Factory(:user).bookmarks.should be_blank
     end
   end

@@ -47,7 +47,7 @@ describe BookmarksController do
       
         it "should return HTTP success" do
           post_create_bookmark(@attrs)
-          response.should be_success
+          response.should redirect_to bookmarks_path
         end
 
         it "should increase bookmarks count by 1" do
@@ -76,7 +76,7 @@ describe BookmarksController do
 
         it "should return HTTP success" do
           post_create_bookmark(@attrs)
-          response.should be_success
+          response.should redirect_to bookmarks_path
         end
 
         it "should not increase bookmarks count" do
@@ -108,7 +108,7 @@ describe BookmarksController do
 
         it "should return HTTP success" do
           send_delete_bookmark
-          response.should be_success
+          response.should redirect_to bookmarks_path
         end
 
         it "should decrease bookmarks count by 1" do
@@ -138,7 +138,7 @@ describe BookmarksController do
 
         it "should return HTTP success" do
           send_delete_bookmark
-          response.should be_success
+          response.should redirect_to bookmarks_path
         end
 
         it "should not decrease bookmarks count by 1" do
@@ -173,7 +173,7 @@ describe BookmarksController do
         describe "empty bookmarks set" do
           it "should return HTTP success" do
             send_mass_destroy([])
-            response.should be_success
+            response.should redirect_to bookmarks_path
           end
 
           it "should not change bookmarks count" do
@@ -190,7 +190,7 @@ describe BookmarksController do
 
           it "should return HTTP success" do
             send_mass_destroy(@bookmarks_to_delete)
-            response.should be_success
+            response.should redirect_to bookmarks_path
           end
 
           it "should change bookmarks count by -2" do
@@ -210,7 +210,7 @@ describe BookmarksController do
 
           it "should return HTTP success" do
             send_mass_destroy(@bookmarks)
-            response.should be_success
+            response.should redirect_to bookmarks_path
           end
           
           it "should empty user bookmarks list" do

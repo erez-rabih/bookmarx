@@ -13,3 +13,15 @@
 //= require jquery
 //= require jquery_ujs
 //= require_tree .
+//
+function showVideoTitleAndThumbnail(jsonp_data){
+  var info = jsonp_data.feed.entry[0];
+  var title = info.title.$t;
+  var thumbnail_src = info.media$group.media$thumbnail[0].url;
+  var id = info.id.$t.match(/video:(\w+)/)[1];
+
+  bookmark_tr = $("tr[data-video-id='"+id+"']");
+  bookmark_tr.find("td.video_title'").html(title);
+  bookmark_tr.find("td.thumbnail img").attr('src', thumbnail_src);
+
+}

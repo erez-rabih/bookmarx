@@ -11,7 +11,7 @@ class BookmarksController < ApplicationController
     flash_message = @bookmark.save ? :successful : :failed
     assign_flash flash_message
     load_bookmarks
-    render :index
+    redirect_to bookmarks_path
   end
 
   def destroy
@@ -23,14 +23,14 @@ class BookmarksController < ApplicationController
       assign_flash :failed
     end
     load_bookmarks
-    render :index
+    redirect_to bookmarks_path
   end
 
   def mass_destroy
     bookmarks_to_delete = current_user.bookmarks.find_all_by_id(params[:ids])
     bookmarks_to_delete.each(&:destroy)
     load_bookmarks
-    render :index
+    redirect_to bookmarks_path
   end
 
   protected
